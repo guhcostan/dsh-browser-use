@@ -1,6 +1,6 @@
 {
   "meta": {
     "title": "Browser Use",
-    "description": "Gives the agent a real browser: navigate, snapshot, click, type, manage tabs and take screenshots through Playwright MCP."
+    "description": "Integrated browser: the agent drives Chrome and you watch it live in the right Sidebar, with a visible agent cursor."
   }
 }

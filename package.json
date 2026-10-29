@@ -1,7 +1,7 @@
 {
   "name": "dsh-browser-use",
-  "version": "0.1.0",
-  "description": "Agent-driven Google Chrome for DeepSeek Harness: a profile bundle that mounts the shared browser-use service with Playwright MCP tools.",
+  "version": "0.2.0",
+  "description": "Integrated browser for DeepSeek Harness: the agent drives Chrome and you watch it live in the right Sidebar, with a visible agent cursor.",
   "type": "module",
   "license": "MIT",
   "author": "Gustavo Costa",
@@ -12,7 +12,9 @@
     "chrome",
     "playwright",
     "mcp",
-    "agent"
+    "agent",
+    "mirror",
+    "cursor"
   ],
   "repository": {
     "type": "git",
@@ -24,12 +26,16 @@
   "homepage": "https://github.com/guhcostan/dsh-browser-use#readme",
   "icon": "./icon.svg",
   "exports": {
+    ".": "./index.js",
+    "./client": "./client.js",
     "./cordis.patch.yml": "./cordis.patch.yml",
     "./locale/*.json": "./locale/*.json",
     "./icon": "./icon.svg",
     "./package.json": "./package.json"
   },
   "files": [
+    "index.js",
+    "client.js",
     "cordis.patch.yml",
     "locale/*.json",
     "icon.svg",
@@ -40,6 +46,14 @@
   "dsh": {
     "bundle": {
       "patch": "./cordis.patch.yml"
+    },
+    "client": {
+      "platform": "web",
+      "immediately": true,
+      "inject": [
+        "@deepseek-ai/dsh-client-ui-sidebar-right",
+        "@deepseek-ai/dsh-client-locale"
+      ]
     }
   },
   "dependencies": {

@@ -1,6 +1,6 @@
 {
   "meta": {
     "title": "浏览器使用",
-    "description": "为智能体提供真实浏览器：通过 Playwright MCP 导航、快照、点击、输入、管理标签页并截图。"
+    "description": "集成浏览器：智能体驱动 Chrome，你在右侧边栏实时观看，并可看到智能体光标。"
   }
 }

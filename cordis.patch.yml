@@ -1,30 +1,21 @@
 # dsh-browser-use — a DeepSeek Harness profile bundle.
 #
-# It inserts the shared browser-use seam (`@deepseek-ai/dsh-browser-use`) and the
-# Playwright MCP provider (`@deepseek-ai/dsh-experimental-browser-use-playwright-mcp`).
-# There is exactly one browser-use provider per profile: do not mount another.
+# v0.2 = integrated browser:
+#   1. `browser-use-chrome` (this package) — launcher + mirror Host routes +
+#      right-Sidebar "Browser use" tab with the agent cursor overlay;
+#   2. the shared browser-use seam;
+#   3. the Playwright MCP provider attached to the launched Chrome over CDP, so
+#      the agent's tools drive the very browser the mirror shows.
 #
-# Default: launch a dedicated visible Chromium per live Session.
-# To drive your installed Google Chrome instead, override this row in your
-# profile's cordis.patch.yml (an override replaces the whole `config`):
-#
-#   - id: browser-use-playwright-mcp
-#     name: '@deepseek-ai/dsh-experimental-browser-use-playwright-mcp'
-#     config:
-#       mode: launch
-#       headless: false
-#       executablePath: /Applications/Google Chrome.app/Contents/MacOS/Google Chrome
-#
-# Or attach to an already-running browser with CDP:
-#
-#   config:
-#     mode: attach
-#     endpoint: 'http://127.0.0.1:9222'
+# Chrome runs on 127.0.0.1:9223 with a dedicated profile at
+# ~/.dsh/browser-use/chrome-profile. Only one browser-use provider is allowed.
 - insert:
+    - id: browser-use-chrome
+      name: 'dsh-browser-use'
     - id: browser-use
       name: '@deepseek-ai/dsh-browser-use'
     - id: browser-use-playwright-mcp
       name: '@deepseek-ai/dsh-experimental-browser-use-playwright-mcp'
       config:
-        mode: launch
-        headless: false
+        mode: attach
+        endpoint: 'http://127.0.0.1:9223'
