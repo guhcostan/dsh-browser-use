@@ -1,0 +1,52 @@
+{
+  "name": "dsh-browser-use",
+  "version": "0.1.0",
+  "description": "Agent-driven Google Chrome for DeepSeek Harness: a profile bundle that mounts the shared browser-use service with Playwright MCP tools.",
+  "type": "module",
+  "license": "MIT",
+  "author": "Gustavo Costa",
+  "keywords": [
+    "deepseek",
+    "dsh",
+    "browser-use",
+    "chrome",
+    "playwright",
+    "mcp",
+    "agent"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/guhcostan/dsh-browser-use.git"
+  },
+  "bugs": {
+    "url": "https://github.com/guhcostan/dsh-browser-use/issues"
+  },
+  "homepage": "https://github.com/guhcostan/dsh-browser-use#readme",
+  "icon": "./icon.svg",
+  "exports": {
+    "./cordis.patch.yml": "./cordis.patch.yml",
+    "./locale/*.json": "./locale/*.json",
+    "./icon": "./icon.svg",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "cordis.patch.yml",
+    "locale/*.json",
+    "icon.svg",
+    "scripts/check.sh",
+    "README.md",
+    "LICENSE"
+  ],
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    }
+  },
+  "dependencies": {
+    "@deepseek-ai/dsh-browser-use": "0.2.1-rc.3",
+    "@deepseek-ai/dsh-experimental-browser-use-playwright-mcp": "0.2.1-rc.3"
+  },
+  "peerDependencies": {
+    "@deepseek-ai/cordis": "~4.0.5"
+  }
+}

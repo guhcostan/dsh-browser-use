@@ -1,0 +1,6 @@
+{
+  "meta": {
+    "title": "Browser Use",
+    "description": "Gives the agent a real browser: navigate, snapshot, click, type, manage tabs and take screenshots through Playwright MCP."
+  }
+}
