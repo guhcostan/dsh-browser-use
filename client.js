@@ -1,11 +1,11 @@
 window.__ModuleLoader__.load({
-  id: 'dsh-browser-use',
+  id: '@guhcostan/dsh-browser-use',
   factory(require) {
     const React = require('react')
     const h = React.createElement
-    const { useEffect, useState } = React
+    const { useEffect, useRef, useState } = React
 
-    const TYPE_ID = 'dsh-browser-use'
+    const TYPE_ID = '@guhcostan/dsh-browser-use'
     const KIND = 'browser-use-mirror'
     const STATUS_URL = '/api/browser-use/status'
     const FRAME_URL = '/api/browser-use/frame.jpg'
@@ -14,6 +14,7 @@ window.__ModuleLoader__.load({
     const STATUS_INTERVAL_MS = 2500
 
     let t = (key) => key
+    let sidebarRight = null
 
     const en = {
       'type.label': 'Browser use',
@@ -23,6 +24,10 @@ window.__ModuleLoader__.load({
       'empty.body': 'Start the integrated Chrome and the agent’s browser appears here live.',
       'action.launch': 'Open browser',
       'action.refresh': 'Refresh',
+      'action.zoomIn': 'Zoom in',
+      'action.zoomOut': 'Zoom out',
+      'action.fit': 'Fit to pane',
+      'action.fullscreen': 'Toggle fullscreen',
       'status.connecting': 'Connecting to the browser…',
       'status.error': 'Could not read the browser status',
       'badge.agent': 'agent in control',
@@ -37,6 +42,10 @@ window.__ModuleLoader__.load({
       'empty.body': '启动集成 Chrome 后，智能体操作的页面会实时显示在这里。',
       'action.launch': '打开浏览器',
       'action.refresh': '刷新',
+      'action.zoomIn': '放大',
+      'action.zoomOut': '缩小',
+      'action.fit': '适应宽度',
+      'action.fullscreen': '全屏切换',
       'status.connecting': '正在连接浏览器…',
       'status.error': '无法读取浏览器状态',
       'badge.agent': '智能体控制中',
@@ -104,6 +113,22 @@ window.__ModuleLoader__.load({
         fontSize: 14,
         lineHeight: 1,
       },
+      controls: { flex: 'none', display: 'flex', alignItems: 'center', gap: 4 },
+      zoomLabel: {
+        flex: 'none',
+        minWidth: 34,
+        height: 24,
+        display: 'inline-flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        borderRadius: 'var(--dsw-radius-sm, 6px)',
+        border: '0.5px solid var(--dsw-alias-border-l1, rgba(255,255,255,0.14))',
+        background: 'transparent',
+        color: 'var(--dsw-alias-label-tertiary, #8a8a8a)',
+        cursor: 'pointer',
+        fontSize: 10,
+        lineHeight: 1,
+      },
       stage: {
         position: 'relative',
         flex: '1 1 auto',
@@ -119,6 +144,20 @@ window.__ModuleLoader__.load({
         width: '100%',
         height: '100%',
         objectFit: 'contain',
+        background: '#0a0a0a',
+      },
+      imageZoomed: {
+        display: 'block',
+        height: 'auto',
+        maxWidth: 'none',
+        background: '#0a0a0a',
+      },
+      stageZoomed: {
+        position: 'relative',
+        flex: '1 1 auto',
+        minHeight: 0,
+        display: 'block',
+        overflow: 'auto',
         background: '#0a0a0a',
       },
       placeholder: {
@@ -193,6 +232,8 @@ window.__ModuleLoader__.load({
       const [frame, setFrame] = useState(null)
       const [busy, setBusy] = useState(false)
       const [refresh, setRefresh] = useState(0)
+      const [zoom, setZoom] = useState(1)
+      const rootRef = useRef(null)
 
       useEffect(() => {
         let cancelled = false
@@ -269,11 +310,22 @@ window.__ModuleLoader__.load({
         }
       }
 
+      const toggleFullscreen = () => {
+        try {
+          const target =
+            sidebarRight?.focusedTarget?.(rootRef.current) ??
+            sidebarRight?.commandTarget?.(rootRef.current)
+          if (target) sidebarRight.toggleFullscreen(target)
+        } catch {
+          /* the panel keeps its own fullscreen control as fallback */
+        }
+      }
+
       const connecting = !frame && (status.loading || (status.running && status.page))
 
       return h(
         'div',
-        { style: styles.root },
+        { ref: rootRef, style: styles.root },
         h(
           'div',
           { style: styles.header },
@@ -305,27 +357,59 @@ window.__ModuleLoader__.load({
               : null,
           ),
           h(
-            'button',
-            {
+            'div',
+            { style: styles.controls },
+            h('button', {
+              type: 'button',
+              style: styles.iconButton,
+              title: t('action.zoomOut'),
+              'aria-label': t('action.zoomOut'),
+              onClick: () => setZoom((value) => Math.max(1, Math.round((value - 0.5) * 10) / 10)),
+            }, '−'),
+            h('button', {
+              type: 'button',
+              style: styles.zoomLabel,
+              title: t('action.fit'),
+              'aria-label': t('action.fit'),
+              onClick: () => setZoom(1),
+            }, zoom === 1 ? 'Fit' : Math.round(zoom * 100) + '%'),
+            h('button', {
+              type: 'button',
+              style: styles.iconButton,
+              title: t('action.zoomIn'),
+              'aria-label': t('action.zoomIn'),
+              onClick: () => setZoom((value) => Math.min(4, Math.round((value + 0.5) * 10) / 10)),
+            }, '+'),
+            h('button', {
+              type: 'button',
+              style: styles.iconButton,
+              title: t('action.fullscreen'),
+              'aria-label': t('action.fullscreen'),
+              onClick: toggleFullscreen,
+            }, '⛶'),
+            h('button', {
               type: 'button',
               style: styles.iconButton,
               title: t('action.refresh'),
               'aria-label': t('action.refresh'),
               onClick: () => setRefresh((value) => value + 1),
-            },
-            '↻',
+            }, '↻'),
           ),
         ),
         h(
           'div',
-          { style: styles.stage },
+          { style: zoom > 1 ? styles.stageZoomed : styles.stage },
           frame
             ? h('img', {
                 key: frame,
                 src: frame,
                 alt: t('aria.mirror'),
                 draggable: false,
-                style: styles.image,
+                onDoubleClick: () => setZoom((value) => (value > 1 ? 1 : 2)),
+                style:
+                  zoom > 1
+                    ? { ...styles.imageZoomed, width: Math.round(zoom * 100) + '%' }
+                    : styles.image,
               })
             : connecting
               ? h('div', { style: styles.placeholder }, t('status.connecting'))
@@ -353,11 +437,12 @@ window.__ModuleLoader__.load({
       )
     }
 
-    const inject = ['slots', 'locale', 'sidebarRightTabs']
+    const inject = ['slots', 'locale', 'sidebarRightTabs', 'sidebarRight']
 
     function apply(ctx) {
       const namespace = 'browserUseMirror'
       t = ctx.locale.bind(namespace)
+      sidebarRight = ctx.sidebarRight
 
       ctx.effect(() => ctx.locale.register(namespace, { zh, en }), 'browser-use:copy')
 

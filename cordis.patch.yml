@@ -11,7 +11,7 @@
 # ~/.dsh/browser-use/chrome-profile. Only one browser-use provider is allowed.
 - insert:
     - id: browser-use-chrome
-      name: 'dsh-browser-use'
+      name: '@guhcostan/dsh-browser-use'
     - id: browser-use
       name: '@deepseek-ai/dsh-browser-use'
     - id: browser-use-playwright-mcp

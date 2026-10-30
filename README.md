@@ -1,5 +1,7 @@
 # dsh-browser-use
 
+[![CI](https://github.com/guhcostan/dsh-browser-use/actions/workflows/ci.yml/badge.svg)](https://github.com/guhcostan/dsh-browser-use/actions/workflows/ci.yml)
+
 **Integrated browser for [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness).**
 The agent drives a real Chrome; you **watch it live in the right Sidebar** — and you can see the
 **agent cursor** move and click inside the page, like a pair-programming session with the browser.
@@ -16,6 +18,7 @@ The agent drives a real Chrome; you **watch it live in the right Sidebar** — a
 | **“Browser use” tab** (right Sidebar) | A live mirror of the very page the agent controls, with status, page title/URL and a refresh control. Opened from the right Sidebar guide. |
 | **Agent cursor** | An overlay injected into the page: a magenta pointer with an “Agent” badge follows the agent’s pointer and pulses on every click. It shows in the integrated mirror **and** in the real Chrome window. |
 | **Open browser** | The launcher starts the dedicated Chrome (CDP on `127.0.0.1:9223`) automatically at profile boot; the tab also has a button to relaunch it. |
+| **Zoom & fullscreen** | `−` / `Fit` or `100–400%` / `+` controls in the tab header; double-click the frame to toggle Fit ↔ 200%; a fullscreen button toggles the panel presentation. Zoomed frames pan/scroll inside the pane so you can read a narrow panel. |
 
 Because the mirror and the agent share one Chrome over CDP, what you see is exactly what the
 agent sees — no second browser, no replayed screenshots from a different session.
@@ -44,6 +47,13 @@ The supported path is the DSH **Plugin Manager**:
 3. **Reload the Web UI** (or restart the app) so the Client half loads. Then open the right
    Sidebar guide (compass) and pick **Browser use**.
 
+> **npm:** the package is published as `@guhcostan/dsh-browser-use`. Once the npm release is
+> live you can install it by name:
+>
+> ```
+> plugin_manager install_bundle target=@guhcostan/dsh-browser-use@0.2.1
+> ```
+
 > One browser-use provider per profile. This bundle mounts the seam plus the Playwright MCP
 > provider in `attach` mode; do not add a second `browser-use` provider.
 
@@ -55,6 +65,7 @@ The supported path is the DSH **Plugin Manager**:
    story”*. The mirror shows the page in real time; the magenta cursor and its pulse show what
    the agent is doing.
 3. The panel is **view-only** for humans; input belongs to the agent’s tools.
+4. Header controls: `−` / zoom label (`Fit` = whole page, percentages = scrollable zoom, up to 400%) / `+`, `⛶` fullscreen, `↻` refresh. Double-clicking the frame toggles Fit ↔ 200%.
 
 ## Configuration
 

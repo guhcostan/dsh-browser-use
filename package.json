@@ -1,6 +1,6 @@
 {
-  "name": "dsh-browser-use",
-  "version": "0.2.0",
+  "name": "@guhcostan/dsh-browser-use",
+  "version": "0.2.1",
   "description": "Integrated browser for DeepSeek Harness: the agent drives Chrome and you watch it live in the right Sidebar, with a visible agent cursor.",
   "type": "module",
   "license": "MIT",
@@ -62,5 +62,8 @@
   },
   "peerDependencies": {
     "@deepseek-ai/cordis": "~4.0.5"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }
